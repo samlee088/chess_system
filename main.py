@@ -63,3 +63,25 @@ class Pawn(Piece):
     def is_first_move(self, start_row):
         return (self.get_color() == Color.WHITE and start_row == 6) or \
         (self.get_color() == Color.BLACK and start_row == 1)
+    
+
+class Knight(Piece):
+    def is_valid_move(self, start_row, start_col, end_row, end_col, board):
+        if not Piece.is_within_grid(end_row, end_col):
+            return False
+        row_movement = abs(end_row - start_row)
+        col_movement = abs(end_col - start_col)
+
+        if row_movement == 2 and col_movement == 1 or \
+            row_movement == 1 and col_movement == 2:
+        
+            if board[end_row][end_col].get_piece() is not None and \
+                board[end_row][end_col].get_piece().get_color() == self.get_color():
+                return False
+            
+            return True
+        
+        return False
+    
+    def get_symbol(self):
+        return "N" if self.get_color() == Color.WHITE else "n"
