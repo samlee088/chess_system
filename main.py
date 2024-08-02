@@ -1,4 +1,5 @@
- 
+from enum import Enum
+from abc import ABC, abstractmethod
 class Color(Enum):
     WHITE = 1
     BLACK = 2
@@ -203,7 +204,7 @@ class ChessBoard:
 
     def __init__(self):
         self.board = [[None for _ in range(8)] for _ in range(8)]
-        self.initialize_board_and_piece()
+        self.initialize_board_and_pieces()
 
     def initialize_board_and_pieces(self):
         for i in range(8):
@@ -293,3 +294,29 @@ class Player:
     def get_color(self):
         return self.color
     
+class ChessGame:
+    def __init__(self):
+        self.board = ChessBoard()
+        self.white_player = Player(Color.WHITE)
+        self.black_player = Player(Color.BLACK)
+        self.current_player = self.white_player
+
+    def start_game(self):
+        print("Welcome to Chess, UPPERCASE denotes white pieces, LOWERCASE denotes black pieces.")
+        self.board.display_board()
+
+        current_player = self.white_player
+
+        while True:
+            print("Current turn:" + str(current_player.get_color()))
+
+            move_successful = self.board.move_piece(self.current_player)
+            if move_successful:
+                self.board.display_board()
+                self.current_player = self.black_player if self.current_player == self.white_player else self.white_player
+            else:
+                print("Invalid move. Please try again.")
+    
+
+game = ChessGame()
+game.start_game()
