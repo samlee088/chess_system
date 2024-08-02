@@ -190,4 +190,10 @@ class King(Piece):
         return "K" if self.get_color == Color.WHITE else 'k'
     
 
+class Queen(Piece):
+    def is_valid_move(self, start_row, start_col, end_row, end_col, board):
+        return MovementUtil.is_valid_straight_move(start_row, start_col, end_row, end_col, self.get_color(), board) or \
+               MovementUtil.is_valid_diagonal_move(start_row, start_col, end_row, end_col, self.get_color(), board)
 
+    def get_symbol(self):
+        return "Q" if self.get_color() == Color.WHITE else 'q'
