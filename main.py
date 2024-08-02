@@ -153,3 +153,11 @@ class MovementUtil:
             return True
         else:   
             return False
+
+class Rook(Piece):
+    def is_valid_move(self, start_row, start_col, end_row, end_col, board):
+        return MovementUtil.is_valid_straight_move(start_row, start_col, end_row, end_col, self.get_color(), board)
+    
+    def get_symbol(self):
+        return "R" if self.get_color() == Color.WHITE else 'r'
+    
