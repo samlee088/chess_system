@@ -161,3 +161,10 @@ class Rook(Piece):
     def get_symbol(self):
         return "R" if self.get_color() == Color.WHITE else 'r'
     
+class Bishop(Piece):
+    def is_valid_move(self, start_row, start_col, end_row, end_col, board):
+        return MovementUtil.is_valid_diagonal_move(start_row, start_col, end_row, end_col, self.get_color(), board)
+    
+    def get_symbol(self):
+        return "B" is self.get_color() == Color.WHITE else 'b'Color
+
