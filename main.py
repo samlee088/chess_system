@@ -197,3 +197,92 @@ class Queen(Piece):
 
     def get_symbol(self):
         return "Q" if self.get_color() == Color.WHITE else 'q'
+    
+
+class ChessBoard:
+
+    def __init__(self):
+        self.board = [[None for _ in range(8)] for _ in range(8)]
+        self.initialize_board_and_piece()
+
+    def initialize_board_and_pieces(self):
+        for i in range(8):
+            for j in range(8):
+                square_color = Color.BLACK if (i + j) % 2 == 0 else Color.WHITE
+                self.board[i][j] = Square(square_color)
+
+        self.initialize_black_pieces()
+        self.initialize_white_pieces()
+
+    def initialize_black_pieces(self):
+        for i in range(8):
+            self.board[1][i].set_piece(Pawn(Color.BLACK))
+
+        self.board[0][0].set_piece(Rook(Color.BLACK))
+        self.board[0][7].set_piece(Rook(Color.BLACK))
+        self.board[0][1].set_piece(Knight(Color.BLACK))
+        self.board[0][6].set_piece(Knight(Color.BLACK))
+        self.board[0][2].set_piece(Bishop(Color.BLACK))
+        self.board[0][5].set_piece(Bishop(Color.BLACK))
+        self.board[0][3].set_piece(Queen(Color.BLACK))
+        self.board[0][4].set_piece(King(Color.BLACK))
+
+    def initialize_white_pieces(self):
+        for i in range(8):
+            self.board[6][i].set_piece(Pawn(Color.WHITE))
+
+        self.board[7][0].set_piece(Rook(Color.WHITE))
+        self.board[7][7].set_piece(Rook(Color.WHITE))
+        self.board[7][1].set_piece(Knight(Color.WHITE))
+        self.board[7][6].set_piece(Knight(Color.WHITE))
+        self.board[7][2].set_piece(Bishop(Color.WHITE))
+        self.board[7][5].set_piece(Bishop(Color.WHITE))
+        self.board[7][3].set_piece(Queen(Color.WHITE))
+        self.board[7][4].set_piece(King(Color.WHITE))
+
+
+    def move_piece(self, current_player):
+        while True:
+            start_row = int(input("Enter starting row: "))
+            start_col = int(input("Enter starting column: "))
+            end_row = int(input("Enter destination row: "))
+            end_col = int(input("Enter destination column: "))
+
+            if not Piece.is_within_grid(end_row, end_col):
+                return False
+            
+            piece_to_move = self.board[start_row][start_col].get_piece()
+
+
+            if not piece_to_move:
+                print("There's no piece at the specified starting position.")
+                continue
+
+            if piece_to_move.color != current_player.color:
+                print("It's not your turn to move this piece.")
+                continue
+
+            if piece_to_move.is_valid_move(start_row, start_col, end_row, end_col, self.board):
+                destination_piece = self.board[end_row][end_col].get_piece()
+                if destination_piece and destination_piece.color != piece_to_move.color:
+                    self.board[end_row][end_col].set_piece(None)
+
+                self.board[end_row][end_col].set_piece(piece_to_move)
+                self.board[start_row][start_col].get_piece(None) # Clear the original square
+                print(f"{piece_to_move.get_symbol()} moved to {end_row}, {end_col}")
+                return True
+            
+            else:
+                print(f"Invalid move for the {piece_to_move.get_symbol()}. Please try again.")
+    
+    def display_board(self):
+        print("  0 1 2 3 4 5 6 7")
+        print("  ---------------")
+        for i in range(8):
+            print(i, end='|')
+            for j in range(8):
+                piece = self.board[i][j].get_piece()
+                print(piece.get_symbol() + " " if piece else ". ", end="")
+            print()
+
+
