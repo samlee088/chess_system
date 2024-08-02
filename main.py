@@ -85,3 +85,71 @@ class Knight(Piece):
     
     def get_symbol(self):
         return "N" if self.get_color() == Color.WHITE else "n"
+    
+
+
+class MovementUtil:
+
+    @staticmethod
+    def is_valid_straight_move(start_row, start_col, end_row, end_col, color, board):
+        if not Piece.is_within_grid(end_row, end_col):
+            return False
+        
+        row_movement = abs(end_row - start_row)
+        col_movement = abs(end_col - start_col)
+
+        if row_movement != 0 and col_movement != 0 or (row_movement == 0 and col_movement == 0):
+            return False
+        else:
+            row_increment = 1 if end_row > start_row else -1
+            col_increment = 1 if end_col > start_col else -1
+
+            if row_movement == 0:
+                y = start_col + col_increment
+                while y != end_col:
+                    if board[start_row][y].get_piece() is not None:
+                        return False
+                    y += col_increment
+            else: 
+                x = start_row + row_increment
+                while x != end_row:
+                    if board[x][start_col].get_piece() is not None:
+                        return False
+                    x += row_increment
+
+                if board[end_row][end_col].get_piece() is not None and \
+                    board[end_row][end_col].get_piece().get_color() == color:
+                        return False
+                return True
+            
+    @staticmethod
+    def is_valid_diagonal_move(start_row, start_col, end_row, end_col, color, board):
+        if not Piece.is_within_grid(end_row, end_col):
+            return False
+        
+        row_movement = abs(end_row - start_row)
+        col_movement = abs(end_col - start_col)
+
+        if row_movement == 0 or col_movement == 0:
+            return False
+        
+        if row_movement == col_movement:
+            row_increment = 1 if end_row > start_row else -1
+            col_increment = 1 if end_col > start_col else -1
+
+            x, y = start_row + row_increment, start_col + col_increment
+
+            while x != end_row and y != end_col:
+                if board[x][y].get_piece() is not None:
+                    return False
+                
+                x += row_increment
+                y += col_increment
+
+            if board[end_row][end_col].get_piece() is not None and \
+                board[end_row][end_col].get_piece().get_color() == color:
+                return False
+            
+            return True
+        else:   
+            return False
